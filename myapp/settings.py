@@ -22,9 +22,12 @@ load_dotenv()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
-
+SERVER = os.getenv("SERVER")
 # SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = True
+if SERVER == "DEVELOPMENT":
+    DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -136,6 +139,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+if DEBUG:
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+# Uploaded Image will be stored here
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
