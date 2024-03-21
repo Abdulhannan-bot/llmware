@@ -36,7 +36,7 @@ def home(request):
     """
     response = prompter.prompt_main(prompt=prompt, context=context)["llm_response"]
     print (f"- Context: {context}\n- Prompt: {prompt}\n- LLM Response:\n{response}")
-    new_chat = Prompt.objects.create(chat={"prompt": prompt, "response": response})
+    new_chat = ChatResponse.objects.create(chat={"prompt": prompt, "response": response})
     new_chat.save()
 
     return Response({'success':True, 'data': {'prompt': new_chat.chat.get("prompt"), 'response': new_chat.chat.get("response")}})
