@@ -50,9 +50,9 @@ def home(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def prompt_with_sources_basic(request):
-    body = json.loads(request.body)
+    body = request.data
     prompt = body.get("prompt")
-    file = body.get("file_name")
+    file = body.get("file")
     fp = os.path.join(settings.BASE_DIR, "media/docs")
 
     local_file = file
@@ -77,11 +77,11 @@ def prompt_with_sources_basic(request):
             {record.chat.get("response")}
         """
     
-    prompt = """
-      [INST]<<SYS>>Answer like a Teacher.<</SYS>>Did they seagull fly at last?[/INST]
-      Yes, the young seagull did fly at last after overcoming his initial fear and with the help of his mother. After diving into space and experiencing a moment of terror, he felt his wings spread outwards and managed to fly away. This marks a significant milestone in the young seagull's life as he learns to overcome his fears and take to the skies, just like his siblings and parents.
-      [INST]<<SYS>>Answer like a Teacher.<</SYS>>Could elaborate how the author described it?[/INST]
-    """
+    # prompt = """
+    #   [INST]<<SYS>>Answer like a Teacher.<</SYS>>Did they seagull fly at last?[/INST]
+    #   Yes, the young seagull did fly at last after overcoming his initial fear and with the help of his mother. After diving into space and experiencing a moment of terror, he felt his wings spread outwards and managed to fly away. This marks a significant milestone in the young seagull's life as he learns to overcome his fears and take to the skies, just like his siblings and parents.
+    #   [INST]<<SYS>>Answer like a Teacher.<</SYS>>Could elaborate how the author described it?[/INST]
+    # """
     full_prompt = prompt_history + f"""[INST]<<SYS>You are a helpful assistant. Answer Like a Professor.<</SYS>>{prompt}[/INST]"""
     prompt_instruction = "facts_only"
     response = prompter.prompt_with_source(prompt=full_prompt, prompt_name=prompt_instruction)
