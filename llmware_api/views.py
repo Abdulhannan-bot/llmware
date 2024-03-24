@@ -10,9 +10,13 @@ import os
 from llmware.prompts import Prompt
 from llmware.setup import Setup
 from llmware.models import PromptCatalog
+from pathlib import Path
+from django.conf import settings
 
 llm_name="TheBloke/Llama-2-7B-Chat-GGUF"
+llm_name="llmware/slim-tags-3b-tool"
 api_key = "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"
+model_name="TheBloke/Llama-2-7B-Chat-GGUF"
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -40,3 +44,54 @@ def home(request):
     new_chat.save()
 
     return Response({'success':True, 'data': {'prompt': new_chat.chat.get("prompt"), 'response': new_chat.chat.get("response")}})
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def prompt_with_sources_basic(request):
+    body = json.loads(request.body)
+    prompt = body.get("prompt")
+    file = body.get("file_name")
+    fp = os.path.join(settings.BASE_DIR, "media/docs")
+
+    local_file = file
+
+    prompter = Prompt().load_model(model_name)
+
+    prompt_history = """"""
+    history = ChatResponse.objects.all().order_by("-id")[:5]
+
+    
+
+    #   .add_source_document will do the following:
+    #       1.  parse the file (any supported document type)
+    #       2.  apply an optional query filter to reduce the text chunks to only those matching the query
+    #       3.  batch according to the model context window, and make available for any future inferences
+
+    sources = prompter.add_source_document(fp, local_file)
+    # [INST]<<SYS>>Answer like a Professor. If Answer not in context say I dont know.<</SYS>>What is IPO?[/INST]
+    for record in history:
+        prompt_history += f"""
+            [INST]<<SYS>>You are a helpful assistant. Answer Like a Professor.<</SYS>>{record.chat.get("prompt")}[/INST]
+            {record.chat.get("response")}
+        """
+    full_prompt = prompt_history + f"""[INST]<<SYS>You are a helpful assistant. Answer Like a Professor.<</SYS>>{prompt}[/INST]"""
+    prompt = """
+      [INST]<<SYS>>Answer like a Teacher.<</SYS>>Did they seagull fly at last?[/INST]
+      Yes, the young seagull did fly at last after overcoming his initial fear and with the help of his mother. After diving into space and experiencing a moment of terror, he felt his wings spread outwards and managed to fly away. This marks a significant milestone in the young seagull's life as he learns to overcome his fears and take to the skies, just like his siblings and parents.
+      [INST]<<SYS>>Answer like a Teacher.<</SYS>>Could elaborate how the author described it?[/INST]
+    """
+    prompt_instruction = "facts_only"
+    response = prompter.prompt_with_source(prompt=full_prompt, prompt_name=prompt_instruction)
+
+    print(f"LLM Response - {response}")
+
+    response_display = response[0]["llm_response"]
+    print (f"- Context: {local_file}\n- Prompt: {prompt}\n- LLM Response:\n{response_display}")
+    prompter.clear_source_materials()
+
+    return Response({'success':True, 'response': response_display, 'source': local_file})
+
+    
+
+    return 0
