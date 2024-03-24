@@ -91,7 +91,7 @@ def prompt_with_sources_basic(request):
     response_display = response[0]["llm_response"]
     print (f"- Context: {local_file}\n- Prompt: {full_prompt}\n- LLM Response:\n{response_display}")
     prompter.clear_source_materials()
-    new_chat = ChatResponse.objects.create(chat={"prompt": full_prompt, "response": response_display})
+    new_chat = ChatResponse.objects.create(chat={"prompt": prompt, "response": response_display})
     new_chat.save()
     return Response({'success':True, 'response': response_display, 'source': local_file})
 
