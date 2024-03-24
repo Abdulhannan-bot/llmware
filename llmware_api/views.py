@@ -14,7 +14,7 @@ from pathlib import Path
 from django.conf import settings
 
 llm_name="TheBloke/Llama-2-7B-Chat-GGUF"
-llm_name="llmware/slim-tags-3b-tool"
+# llm_name="llmware/slim-tags-3b-tool"
 api_key = "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"
 model_name="TheBloke/Llama-2-7B-Chat-GGUF"
 
