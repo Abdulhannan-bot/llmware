@@ -17,11 +17,13 @@ cffi==1.16.0
 charset-normalizer==3.3.2
 click==8.1.7
 colorama==0.4.6
+cors==1.0.1
 cryptography==42.0.5
 datasets==2.15.0
 dill==0.3.7
 distro==1.9.0
 Django==5.0.3
+django-cors-headers==4.3.1
 djangorestframework==3.15.0
 dnspython==2.6.1
 einops==0.7.0
@@ -31,6 +33,9 @@ filelock==3.13.1
 frozendict==2.4.0
 frozenlist==1.4.1
 fsspec==2023.10.0
+future==1.0.0
+gevent==24.2.1
+greenlet==3.0.3
 grpcio==1.60.0
 gunicorn==21.2.0
 h11==0.14.0
@@ -73,6 +78,7 @@ pydantic==2.6.4
 pydantic_core==2.16.3
 pymilvus==2.4.0
 pymongo==4.5.0
+PySocks==1.7.1
 pytesseract==0.3.10
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
@@ -80,6 +86,7 @@ pytz==2024.1
 PyYAML==6.0.1
 regex==2023.12.25
 requests==2.31.0
+requests-file==2.0.0
 s3transfer==0.6.2
 safetensors==0.4.2
 scikit-learn==1.4.1.post1
@@ -93,6 +100,7 @@ sqlparse==0.4.4
 sympy==1.12
 tabulate==0.9.0
 threadpoolctl==3.4.0
+tldextract==5.1.2
 tokenizers==0.15.2
 torch==2.2.1
 torchvision==0.17.1
@@ -109,3 +117,5 @@ word2number==1.1
 xxhash==3.4.1
 yarl==1.9.4
 yfinance==0.2.28
+zope.event==5.0
+zope.interface==6.2
