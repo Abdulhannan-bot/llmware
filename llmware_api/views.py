@@ -75,21 +75,23 @@ def prompt_with_sources_basic(request):
             [INST]<<SYS>>You are a helpful assistant. Answer Like a Professor.<</SYS>>{record.chat.get("prompt")}[/INST]
             {record.chat.get("response")}
         """
-    full_prompt = prompt_history + f"""[INST]<<SYS>You are a helpful assistant. Answer Like a Professor.<</SYS>>{prompt}[/INST]"""
+    
     prompt = """
       [INST]<<SYS>>Answer like a Teacher.<</SYS>>Did they seagull fly at last?[/INST]
       Yes, the young seagull did fly at last after overcoming his initial fear and with the help of his mother. After diving into space and experiencing a moment of terror, he felt his wings spread outwards and managed to fly away. This marks a significant milestone in the young seagull's life as he learns to overcome his fears and take to the skies, just like his siblings and parents.
       [INST]<<SYS>>Answer like a Teacher.<</SYS>>Could elaborate how the author described it?[/INST]
     """
+    full_prompt = prompt_history + f"""[INST]<<SYS>You are a helpful assistant. Answer Like a Professor.<</SYS>>{prompt}[/INST]"""
     prompt_instruction = "facts_only"
     response = prompter.prompt_with_source(prompt=full_prompt, prompt_name=prompt_instruction)
 
     print(f"LLM Response - {response}")
 
     response_display = response[0]["llm_response"]
-    print (f"- Context: {local_file}\n- Prompt: {prompt}\n- LLM Response:\n{response_display}")
+    print (f"- Context: {local_file}\n- Prompt: {full_prompt}\n- LLM Response:\n{response_display}")
     prompter.clear_source_materials()
-
+    new_chat = ChatResponse.objects.create(chat={"prompt": full_prompt, "response": response_display})
+    new_chat.save()
     return Response({'success':True, 'response': response_display, 'source': local_file})
 
     
