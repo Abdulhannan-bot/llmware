@@ -23,6 +23,7 @@ model_name="TheBloke/Llama-2-7B-Chat-GGUF"
 def home(request):
     body = json.loads(request.body)
     prompt = body.get("prompt")
+    prompt = request.data.get("prompt")
     prompter = Prompt(llm_name=llm_name, llm_api_key=api_key)
     history = ChatResponse.objects.all().order_by("-id")[:5]
     context = ""
